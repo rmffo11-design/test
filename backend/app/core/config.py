@@ -10,7 +10,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     SECRET_KEY: str
     APP_ENV: str = "dev"
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://woojoo.app",
+        "https://www.woojoo.app",
+    ]
 
 
 @lru_cache
