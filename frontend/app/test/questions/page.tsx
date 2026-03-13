@@ -228,8 +228,8 @@ export default function TestQuestionsPage() {
 
         {(saveAnswersMutation.isError || completeMutation.isError) && (
           <p className="mt-4 text-sm text-red-600 dark:text-red-400">
-            {(saveAnswersMutation.error || completeMutation.error) instanceof Error
-              ? (saveAnswersMutation.error || completeMutation.error).message
+            {(saveAnswersMutation.error ?? completeMutation.error) instanceof Error
+              ? ((saveAnswersMutation.error ?? completeMutation.error) as Error).message
               : "Something went wrong."}
           </p>
         )}
