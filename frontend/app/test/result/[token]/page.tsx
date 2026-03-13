@@ -6,36 +6,38 @@ import { use } from "react";
 import { getResult } from "@/lib/api";
 
 const GRADE_LABEL: Record<string, string> = {
+  VVIP: "VVIP",
   VIP: "VIP",
-  PREMIUM: "PREMIUM",
-  UPPER: "UPPER",
-  NORMAL: "NORMAL",
-  LOW: "LOW",
+  Premium: "Premium",
+  Standard: "Standard",
+  Basic: "Basic",
 };
 
 const GRADE_DESC: Record<string, string> = {
-  VIP: "최상위 매력도를 보유한 예비 배우자입니다.",
-  PREMIUM: "높은 경쟁력을 갖춘 결혼 적합 파트너입니다.",
-  UPPER: "평균 이상의 조건을 갖추고 있습니다.",
-  NORMAL: "기본적인 결혼 조건을 충족합니다.",
-  LOW: "전반적인 개선이 필요한 상태입니다.",
+  VVIP: "최상위 매력도를 보유한 예비 배우자입니다. (상위 1%)",
+  VIP: "높은 경쟁력을 갖춘 결혼 적합 파트너입니다.",
+  Premium: "평균 이상의 조건을 갖추고 있습니다.",
+  Standard: "기본적인 결혼 조건을 충족합니다.",
+  Basic: "전반적인 개선이 필요한 상태입니다.",
 };
 
 const METRIC_NAME: Record<string, string> = {
   appearance: "외모",
   education: "학력",
+  job: "직업",
   income: "소득",
-  family: "가족",
+  asset: "자산",
+  family: "가족배경",
   personality: "성격",
   lifestyle: "라이프스타일",
 };
 
 const GRADE_COLOR: Record<string, string> = {
+  VVIP: "text-amber-500 dark:text-amber-400",
   VIP: "text-yellow-600 dark:text-yellow-400",
-  PREMIUM: "text-purple-600 dark:text-purple-400",
-  UPPER: "text-blue-600 dark:text-blue-400",
-  NORMAL: "text-zinc-700 dark:text-zinc-300",
-  LOW: "text-red-600 dark:text-red-400",
+  Premium: "text-purple-600 dark:text-purple-400",
+  Standard: "text-blue-600 dark:text-blue-400",
+  Basic: "text-zinc-600 dark:text-zinc-400",
 };
 
 type PageProps = { params: Promise<{ token: string }> };

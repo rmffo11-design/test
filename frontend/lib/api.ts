@@ -28,6 +28,7 @@ export async function fetchApi<T>(
 export type QuestionOption = { option_id: number; option_text: string };
 export type Question = {
   question_id: number;
+  code: string;
   question_text: string;
   options: QuestionOption[];
 };

@@ -13,6 +13,7 @@ class QuestionOptionSchema(BaseModel):
 
 class QuestionSchema(BaseModel):
     question_id: int
+    code: str
     question_text: str
     question_type: str | None = None
     display_order: int

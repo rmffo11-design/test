@@ -19,6 +19,55 @@ import { NextButton } from "./components/NextButton";
 import { ProgressBar } from "./components/ProgressBar";
 import { QuestionCard } from "./components/QuestionCard";
 
+const STAGE_LABEL: Record<string, string> = {
+  Q_BASIC: "기본 프로필",
+  Q_APP: "외모 및 생활 정보",
+  Q_EDU: "학력",
+  Q_JOB: "직업",
+  Q_INC: "경제력",
+  Q_ASSET: "경제력",
+  Q_FAM: "가족 배경",
+  Q_PER: "성격 평가",
+  Q_LST: "라이프스타일",
+};
+
+function getStageLabel(code: string): string {
+  const prefix = Object.keys(STAGE_LABEL).find((k) => code.startsWith(k));
+  return prefix ? STAGE_LABEL[prefix] : "";
+}
+
+function getSelectedOptionText(
+  questions: Question[],
+  code: string,
+  answers: Record<number, number>
+): string | null {
+  const q = questions.find((q) => q.code === code);
+  if (!q) return null;
+  const opt = q.options.find((o) => o.option_id === answers[q.question_id]);
+  return opt?.option_text ?? null;
+}
+
+function shouldSkip(questions: Question[], idx: number, answers: Record<number, number>): boolean {
+  const q = questions[idx];
+  if (!q) return false;
+  if (q.code === "Q_BASIC_04") {
+    return getSelectedOptionText(questions, "Q_BASIC_03", answers) !== "서울";
+  }
+  return false;
+}
+
+function nextIdx(questions: Question[], from: number, answers: Record<number, number>): number {
+  let next = from + 1;
+  while (next < questions.length && shouldSkip(questions, next, answers)) next++;
+  return next;
+}
+
+function prevIdx(questions: Question[], from: number, answers: Record<number, number>): number {
+  let prev = from - 1;
+  while (prev > 0 && shouldSkip(questions, prev, answers)) prev--;
+  return prev;
+}
+
 export default function TestQuestionsPage() {
   const router = useRouter();
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -69,15 +118,14 @@ export default function TestQuestionsPage() {
     },
   });
 
-  const total = questionnaire?.questions?.length ?? 0;
-  const currentQuestion = total
-    ? questionnaire!.questions[index]
-    : null;
+  const questions = questionnaire?.questions ?? [];
+  const total = questions.length;
+  const currentQuestion = total ? questions[index] : null;
   const selectedOptionId = currentQuestion
     ? answers[currentQuestion.question_id] ?? null
     : null;
   const canGoNext = selectedOptionId !== null;
-  const isLast = total > 0 && index === total - 1;
+  const isLast = total > 0 && nextIdx(questions, index, answers) >= total;
   const isFinishing =
     saveAnswersMutation.isPending || completeMutation.isPending;
 
@@ -88,24 +136,29 @@ export default function TestQuestionsPage() {
 
   function handleNext() {
     if (!canGoNext || !sessionId) return;
+    const updatedAnswers = currentQuestion
+      ? { ...answers, [currentQuestion.question_id]: selectedOptionId! }
+      : answers;
     if (isLast) {
-      const answerList = questionnaire!.questions.map((q: Question) => ({
+      const answerList = questions.map((q: Question) => ({
         question_id: q.question_id,
-        option_id:
-          q.question_id === currentQuestion!.question_id
-            ? selectedOptionId
-            : answers[q.question_id] ?? null,
+        option_id: updatedAnswers[q.question_id] ?? null,
       }));
       saveAnswersMutation.mutate(
         { sessionId, answers: answerList },
-        {
-          onSuccess: () => {
-            completeMutation.mutate(sessionId);
-          },
-        }
+        { onSuccess: () => completeMutation.mutate(sessionId) }
       );
     } else {
-      setIndex((i) => Math.min(i + 1, total - 1));
+      setAnswers(updatedAnswers);
+      setIndex(nextIdx(questions, index, updatedAnswers));
+    }
+  }
+
+  function handleBack() {
+    if (index === 0) {
+      router.push("/test/start");
+    } else {
+      setIndex(prevIdx(questions, index, answers));
     }
   }
 
@@ -179,7 +232,7 @@ export default function TestQuestionsPage() {
       <main className="mx-auto w-full max-w-3xl px-6 py-16">
         <header className="mb-8 flex flex-col gap-4">
           <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            결혼 적합도 평가
+            {currentQuestion ? getStageLabel(currentQuestion.code) : "결혼 적합도 평가"}
           </p>
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -205,12 +258,13 @@ export default function TestQuestionsPage() {
         />
 
         <div className="mt-6 flex items-center justify-between gap-4">
-          <Link
-            href="/test/start"
+          <button
+            type="button"
+            onClick={handleBack}
             className="rounded-full border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
           >
             이전
-          </Link>
+          </button>
 
           <div className="flex items-center gap-3">
             <div className="hidden text-xs text-zinc-600 dark:text-zinc-400 sm:block">

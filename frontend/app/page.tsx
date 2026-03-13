@@ -2,38 +2,38 @@ import Link from "next/link";
 
 const GRADE_EXAMPLES = [
   {
-    grade: "VIP",
-    score: "93",
-    color: "border-yellow-300 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950",
-    badge: "bg-yellow-400 text-yellow-900",
-    desc: "최상위 매력도를 보유한 예비 배우자입니다.",
+    grade: "VVIP",
+    score: "90+",
+    color: "border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950",
+    badge: "bg-amber-400 text-amber-900",
+    desc: "최상위 매력도를 보유한 예비 배우자입니다. (상위 1%)",
   },
   {
-    grade: "PREMIUM",
-    score: "82",
-    color: "border-purple-300 bg-purple-50 dark:border-purple-800 dark:bg-purple-950",
-    badge: "bg-purple-500 text-white",
+    grade: "VIP",
+    score: "75+",
+    color: "border-yellow-300 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950",
+    badge: "bg-yellow-400 text-yellow-900",
     desc: "높은 경쟁력을 갖춘 결혼 적합 파트너입니다.",
   },
   {
-    grade: "UPPER",
-    score: "74",
-    color: "border-blue-300 bg-blue-50 dark:border-blue-800 dark:bg-blue-950",
-    badge: "bg-blue-500 text-white",
+    grade: "Premium",
+    score: "60+",
+    color: "border-purple-300 bg-purple-50 dark:border-purple-800 dark:bg-purple-950",
+    badge: "bg-purple-500 text-white",
     desc: "평균 이상의 조건을 갖추고 있습니다.",
   },
   {
-    grade: "NORMAL",
-    score: "61",
-    color: "border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900",
-    badge: "bg-zinc-500 text-white",
+    grade: "Standard",
+    score: "45+",
+    color: "border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950",
+    badge: "bg-blue-500 text-white",
     desc: "기본적인 결혼 조건을 충족합니다.",
   },
   {
-    grade: "LOW",
-    score: "44",
-    color: "border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950",
-    badge: "bg-red-500 text-white",
+    grade: "Basic",
+    score: "~44",
+    color: "border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900",
+    badge: "bg-zinc-500 text-white",
     desc: "전반적인 개선이 필요한 상태입니다.",
   },
 ];
@@ -41,8 +41,10 @@ const GRADE_EXAMPLES = [
 const METRICS = [
   { label: "외모", icon: "✨" },
   { label: "학력", icon: "🎓" },
-  { label: "소득", icon: "💼" },
-  { label: "가족", icon: "🏠" },
+  { label: "직업", icon: "💼" },
+  { label: "소득", icon: "💰" },
+  { label: "자산", icon: "🏠" },
+  { label: "가족배경", icon: "👨‍👩‍👧" },
   { label: "성격", icon: "💛" },
   { label: "라이프스타일", icon: "🌿" },
 ];
@@ -62,10 +64,10 @@ export default function Home() {
         </h1>
 
         <p className="max-w-xl text-pretty text-lg leading-8 text-zinc-500 dark:text-zinc-400">
-          외모·학력·소득·성격 등 6가지 핵심 지표를 기반으로
-          당신의 결혼 시장 경쟁력을 객관적으로 평가합니다.
+          외모·학력·직업·소득·자산·가족배경·성격·라이프스타일
+          8가지 핵심 지표를 기반으로 당신의 결혼 시장 경쟁력을 객관적으로 평가합니다.
           <br />
-          6개 문항 · 약 3분 소요
+          34개 문항 · 약 5분 소요
         </p>
 
         {/* CTA */}
@@ -85,7 +87,7 @@ export default function Home() {
         <p className="mb-5 text-center text-sm font-medium text-zinc-500 dark:text-zinc-400">
           6가지 평가 항목
         </p>
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+        <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
           {METRICS.map((m) => (
             <div
               key={m.label}

@@ -68,14 +68,14 @@ class ScoringService:
 
     def _classify_grade(self, total_score: float) -> str:
         if total_score >= 90:
+            return "VVIP"
+        if total_score >= 75:
             return "VIP"
-        if total_score >= 80:
-            return "PREMIUM"
-        if total_score >= 70:
-            return "UPPER"
         if total_score >= 60:
-            return "NORMAL"
-        return "LOW"
+            return "Premium"
+        if total_score >= 45:
+            return "Standard"
+        return "Basic"
 
     async def _store_result(
         self, session_id: str, total_score: float, metric_scores: dict[int, float]
