@@ -114,7 +114,7 @@ export default function TestQuestionsPage() {
       <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-50">
         <main className="mx-auto w-full max-w-3xl px-6 py-16">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            No session. Redirecting…
+            세션이 없습니다. 이동 중…
           </p>
         </main>
       </div>
@@ -126,7 +126,7 @@ export default function TestQuestionsPage() {
       <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-50">
         <main className="mx-auto w-full max-w-3xl px-6 py-16">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            {questionnaireLoading ? "Loading questionnaire…" : "No questionnaire."}
+            {questionnaireLoading ? "문항을 불러오는 중…" : "문항이 없습니다."}
           </p>
         </main>
       </div>
@@ -139,7 +139,7 @@ export default function TestQuestionsPage() {
         <main className="mx-auto w-full max-w-3xl px-6 py-16">
           <div className="rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950">
             <p className="text-sm text-red-800 dark:text-red-200">
-              Failed to load questionnaire.
+              문항을 불러올 수 없습니다.
             </p>
             <p className="mt-1 text-xs text-red-600 dark:text-red-400">
               {(questionnaireError as Error).message}
@@ -149,7 +149,7 @@ export default function TestQuestionsPage() {
             href="/test/start"
             className="mt-4 inline-block rounded-full border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
           >
-            Back to start
+            처음으로 돌아가기
           </Link>
         </main>
       </div>
@@ -161,13 +161,13 @@ export default function TestQuestionsPage() {
       <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-50">
         <main className="mx-auto w-full max-w-3xl px-6 py-16">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            This questionnaire has no questions.
+            등록된 문항이 없습니다.
           </p>
           <Link
             href="/test/start"
             className="mt-4 inline-block rounded-full border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
           >
-            Back to start
+            처음으로 돌아가기
           </Link>
         </main>
       </div>
@@ -179,21 +179,19 @@ export default function TestQuestionsPage() {
       <main className="mx-auto w-full max-w-3xl px-6 py-16">
         <header className="mb-8 flex flex-col gap-4">
           <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            /test/questions
+            결혼 적합도 평가
           </p>
           <div className="flex items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight">
-                Questionnaire
+                평가 문항
               </h1>
               <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                Answer the questions below.
+                각 문항에 솔직하게 답해주세요.
               </p>
             </div>
             <div className="text-right text-xs text-zinc-600 dark:text-zinc-400">
-              ID <span className="font-medium">{questionnaire.questionnaire_id}</span>
-              <br />
-              v{questionnaire.version_no}
+              {index + 1} / {total}
             </div>
           </div>
 
@@ -211,12 +209,12 @@ export default function TestQuestionsPage() {
             href="/test/start"
             className="rounded-full border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
           >
-            Back
+            이전
           </Link>
 
           <div className="flex items-center gap-3">
             <div className="hidden text-xs text-zinc-600 dark:text-zinc-400 sm:block">
-              {canGoNext ? "Ready" : "Select an option to continue"}
+              {canGoNext ? "선택 완료" : "항목을 선택해주세요"}
             </div>
             <NextButton
               disabled={!canGoNext || isFinishing}
@@ -230,7 +228,7 @@ export default function TestQuestionsPage() {
           <p className="mt-4 text-sm text-red-600 dark:text-red-400">
             {(saveAnswersMutation.error ?? completeMutation.error) instanceof Error
               ? ((saveAnswersMutation.error ?? completeMutation.error) as Error).message
-              : "Something went wrong."}
+              : "오류가 발생했습니다."}
           </p>
         )}
       </main>

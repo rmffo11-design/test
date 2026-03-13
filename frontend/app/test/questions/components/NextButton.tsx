@@ -16,7 +16,7 @@ export function NextButton({ disabled, isLast, onClick }: NextButtonProps) {
         "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-zinc-900 dark:disabled:hover:bg-white",
       ].join(" ")}
     >
-      {isLast ? "Finish" : "Next"}
+      {isLast ? "결과 보기" : "다음"}
     </button>
   );
 }

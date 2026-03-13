@@ -13,6 +13,23 @@ const GRADE_LABEL: Record<string, string> = {
   LOW: "LOW",
 };
 
+const GRADE_DESC: Record<string, string> = {
+  VIP: "최상위 매력도를 보유한 예비 배우자입니다.",
+  PREMIUM: "높은 경쟁력을 갖춘 결혼 적합 파트너입니다.",
+  UPPER: "평균 이상의 조건을 갖추고 있습니다.",
+  NORMAL: "기본적인 결혼 조건을 충족합니다.",
+  LOW: "전반적인 개선이 필요한 상태입니다.",
+};
+
+const METRIC_NAME: Record<string, string> = {
+  appearance: "외모",
+  education: "학력",
+  income: "소득",
+  family: "가족",
+  personality: "성격",
+  lifestyle: "라이프스타일",
+};
+
 const GRADE_COLOR: Record<string, string> = {
   VIP: "text-yellow-600 dark:text-yellow-400",
   PREMIUM: "text-purple-600 dark:text-purple-400",
@@ -89,6 +106,9 @@ export default function TestResultPage({ params }: PageProps) {
                   >
                     {GRADE_LABEL[data.grade] ?? data.grade}
                   </p>
+                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                    {GRADE_DESC[data.grade]}
+                  </p>
                 </div>
               </div>
             </section>
@@ -105,7 +125,7 @@ export default function TestResultPage({ params }: PageProps) {
                       className="flex items-center justify-between gap-4"
                     >
                       <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                        Metric {metricId}
+                        {METRIC_NAME[metricId] ?? metricId}
                       </span>
                       <span className="text-sm font-semibold">
                         {(score as number).toFixed(1)}

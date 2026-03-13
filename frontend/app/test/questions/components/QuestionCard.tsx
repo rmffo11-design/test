@@ -25,7 +25,7 @@ export function QuestionCard({
   return (
     <section className="rounded-3xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
       <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-        Question
+        문항
       </div>
       <h2 className="mt-2 text-xl font-semibold leading-7 tracking-tight">
         {question.question_text}
