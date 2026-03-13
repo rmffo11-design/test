@@ -15,12 +15,13 @@ load_dotenv()
 
 DATABASE_URL = os.environ["DATABASE_URL"]
 
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=False,
-    connect_args={"ssl": "require"} if "supabase" in DATABASE_URL else {},
-    prepared_statement_cache_size=0 if "supabase" in DATABASE_URL else 100,
-)
+_connect_args: dict = {}
+if "supabase" in DATABASE_URL:
+    _connect_args["ssl"] = "require"
+if ":6543" in DATABASE_URL:  # Transaction Pooler: disable prepared statement cache
+    _connect_args["statement_cache_size"] = 0
+
+engine = create_async_engine(DATABASE_URL, echo=False, connect_args=_connect_args)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 # Import models after engine is ready

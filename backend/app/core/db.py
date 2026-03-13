@@ -18,14 +18,20 @@ class Base(DeclarativeBase):
 
 
 _is_supabase = "supabase" in settings.DATABASE_URL
+_is_transaction_pooler = ":6543" in settings.DATABASE_URL
+
+_connect_args: dict = {}
+if _is_supabase:
+    _connect_args["ssl"] = "require"
+if _is_transaction_pooler:
+    # asyncpg: disable prepared statement cache for Supabase Transaction Pooler
+    _connect_args["statement_cache_size"] = 0
 
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     future=True,
-    connect_args={"ssl": "require"} if _is_supabase else {},
-    # Transaction Pooler (port 6543) doesn't support prepared statements
-    prepared_statement_cache_size=0 if _is_supabase else 100,
+    connect_args=_connect_args,
 )
 
 AsyncSessionLocal = async_sessionmaker(
