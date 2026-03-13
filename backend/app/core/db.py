@@ -17,11 +17,15 @@ class Base(DeclarativeBase):
     pass
 
 
+_is_supabase = "supabase" in settings.DATABASE_URL
+
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     future=True,
-    connect_args={"ssl": "require"} if "supabase" in settings.DATABASE_URL else {},
+    connect_args={"ssl": "require"} if _is_supabase else {},
+    # Transaction Pooler (port 6543) doesn't support prepared statements
+    prepared_statement_cache_size=0 if _is_supabase else 100,
 )
 
 AsyncSessionLocal = async_sessionmaker(
