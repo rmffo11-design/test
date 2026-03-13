@@ -23,6 +23,7 @@ class ScoringService:
                 "total_score": 0.0,
                 "grade": result.grade_code,
                 "metric_scores": {},
+                "result_token": str(result.result_token),
             }
 
         rules = await self._get_rules(session.questionnaire_id)
@@ -41,7 +42,8 @@ class ScoringService:
         return {
             "total_score": total_score,
             "grade": result.grade_code,
-            "metric_scores": dict(metric_scores),
+            "metric_scores": {str(k): v for k, v in metric_scores.items()},
+            "result_token": str(result.result_token),
         }
 
     async def _get_session(self, session_id: str) -> TestSession | None:

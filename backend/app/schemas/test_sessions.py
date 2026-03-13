@@ -8,9 +8,13 @@ class AnswerInputSchema(BaseModel):
     option_id: int | None = None
 
 
+class AnswerBatchSchema(BaseModel):
+    answers: List[AnswerInputSchema]
+
+
 class TestSessionCreateSchema(BaseModel):
     questionnaire_id: int
-    # user_id, locale 등을 필요시 확장 가능
+    locale: str = "ko-KR"
 
 
 class TestResultSchema(BaseModel):

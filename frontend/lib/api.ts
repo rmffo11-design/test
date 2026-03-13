@@ -50,6 +50,13 @@ export type CompleteSessionResponse = {
   result_token: string;
 };
 
+export type TestResult = {
+  total_score: number;
+  grade: string;
+  metric_scores: Record<string, number>;
+  result_token: string;
+};
+
 export function getCurrentQuestionnaire() {
   return fetchApi<QuestionnaireResponse>("/questionnaires/current");
 }
@@ -77,4 +84,8 @@ export function completeSession(sessionId: string) {
     `/test-sessions/${sessionId}/complete`,
     { method: "POST" }
   );
+}
+
+export function getResult(token: string) {
+  return fetchApi<TestResult>(`/results/${token}`);
 }

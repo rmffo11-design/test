@@ -6,7 +6,7 @@ from app.models import TestAnswer
 from app.repositories.answers import AnswerRepository
 from app.repositories.sessions import SessionRepository
 from app.schemas.test_sessions import (
-    AnswerInputSchema,
+    AnswerBatchSchema,
     TestResultSchema,
     TestSessionCreateSchema,
 )
@@ -29,7 +29,7 @@ async def create_test_session(
 @router.put("/{session_id}/answers")
 async def save_test_answers(
     session_id: str,
-    answers: list[AnswerInputSchema],
+    body: AnswerBatchSchema,
     db: AsyncSession = Depends(get_db),
 ):
     session_repo = SessionRepository(db)
@@ -47,7 +47,7 @@ async def save_test_answers(
             question_id=a.question_id,
             option_id=a.option_id,
         )
-        for a in answers
+        for a in body.answers
     ]
     await answer_repo.save_answers(models)
     return {"saved": len(models)}
@@ -75,6 +75,6 @@ async def complete_test_session(
         total_score=result_data["total_score"],
         grade=result_data["grade"],
         metric_scores=result_data["metric_scores"],
-        result_token="",  # routes_results에서 실제 토큰 제공
+        result_token=result_data["result_token"],
     )
 
