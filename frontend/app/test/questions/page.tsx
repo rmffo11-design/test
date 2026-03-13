@@ -9,7 +9,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   completeSession,
+  CompleteSessionResponse,
   getCurrentQuestionnaire,
+  Question,
   saveAnswers,
   SESSION_STORAGE_KEY,
 } from "@/lib/api";
@@ -59,7 +61,7 @@ export default function TestQuestionsPage() {
 
   const completeMutation = useMutation({
     mutationFn: completeSession,
-    onSuccess: (data) => {
+    onSuccess: (data: CompleteSessionResponse) => {
       if (typeof window !== "undefined") {
         window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
       }
@@ -87,7 +89,7 @@ export default function TestQuestionsPage() {
   function handleNext() {
     if (!canGoNext || !sessionId) return;
     if (isLast) {
-      const answerList = questionnaire!.questions.map((q) => ({
+      const answerList = questionnaire!.questions.map((q: Question) => ({
         question_id: q.question_id,
         option_id:
           q.question_id === currentQuestion!.question_id
@@ -199,7 +201,7 @@ export default function TestQuestionsPage() {
         </header>
 
         <QuestionCard
-          question={currentQuestion}
+          question={currentQuestion!}
           selectedOptionId={selectedOptionId}
           onSelectOption={handleSelect}
         />
