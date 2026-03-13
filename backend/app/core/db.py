@@ -17,7 +17,12 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_async_engine(settings.DATABASE_URL, echo=False, future=True)
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,
+    future=True,
+    connect_args={"ssl": "require"} if "supabase" in settings.DATABASE_URL else {},
+)
 
 AsyncSessionLocal = async_sessionmaker(
     engine,
