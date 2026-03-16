@@ -32,6 +32,8 @@ engine = create_async_engine(
     echo=False,
     future=True,
     connect_args=_connect_args,
+    pool_pre_ping=True,
+    pool_recycle=300,
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -44,4 +46,3 @@ AsyncSessionLocal = async_sessionmaker(
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         yield session
-

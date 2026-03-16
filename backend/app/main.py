@@ -23,10 +23,13 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Starting up — creating DB tables")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("DB tables ready")
+    try:
+        logger.info("Starting up — creating DB tables")
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("DB tables ready")
+    except Exception as exc:
+        logger.warning("DB table creation failed (tables may already exist): %s", exc)
     yield
     logger.info("Shutting down")
 
