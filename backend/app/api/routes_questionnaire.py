@@ -12,15 +12,12 @@ router = APIRouter(prefix="/questionnaires", tags=["questionnaires"])
 @router.get("/current", response_model=QuestionnaireResponseSchema)
 async def get_current_questionnaire(db: AsyncSession = Depends(get_db)):
     repo = QuestionnaireRepository(db)
-    current = await repo.get_current_questionnaire()
-    if not current:
+    questionnaire = await repo.get_current_questionnaire()
+    if not questionnaire:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No published questionnaire found.",
         )
-    questionnaire = await repo.get_questionnaire_with_questions(
-        current.questionnaire_id
-    )
     return questionnaire
 
 

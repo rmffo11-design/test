@@ -1,10 +1,11 @@
+import asyncio
 from collections import defaultdict
 from typing import Any, Dict, List
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import ScoringRule, TestAnswer, TestResult, TestSession
+from app.models import Metric, ScoringRule, TestAnswer, TestResult, TestSession
 
 
 class ScoringService:
@@ -16,7 +17,13 @@ class ScoringService:
         if session is None:
             raise ValueError("Session not found")
 
-        answers = await self._get_answers(session_id)
+        # 독립적인 3개 쿼리 병렬 실행 (순차 → 동시)
+        answers, rules, metric_code_map = await asyncio.gather(
+            self._get_answers(session_id),
+            self._get_rules(session.questionnaire_id),
+            self._get_metric_code_map(),
+        )
+
         if not answers:
             result = await self._store_result(session_id, 0.0, {})
             return {
@@ -25,8 +32,6 @@ class ScoringService:
                 "metric_scores": {},
                 "result_token": str(result.result_token),
             }
-
-        rules = await self._get_rules(session.questionnaire_id)
 
         metric_scores: Dict[int, float] = defaultdict(float)
         for a in answers:
@@ -39,10 +44,14 @@ class ScoringService:
         total_score = float(sum(metric_scores.values()))
         result = await self._store_result(session_id, total_score, dict(metric_scores))
 
+        metric_scores_by_code = {
+            metric_code_map.get(k, str(k)): v for k, v in metric_scores.items()
+        }
+
         return {
             "total_score": total_score,
             "grade": result.grade_code,
-            "metric_scores": {str(k): v for k, v in metric_scores.items()},
+            "metric_scores": metric_scores_by_code,
             "result_token": str(result.result_token),
         }
 
@@ -57,6 +66,10 @@ class ScoringService:
             select(TestAnswer).where(TestAnswer.session_id == session_id)
         )
         return list(res.scalars())
+
+    async def _get_metric_code_map(self) -> Dict[int, str]:
+        res = await self.db.execute(select(Metric))
+        return {m.metric_id: m.code for m in res.scalars()}
 
     async def _get_rules(self, questionnaire_id: int) -> List[ScoringRule]:
         res = await self.db.execute(
@@ -105,4 +118,3 @@ class ScoringService:
         await self.db.commit()
         await self.db.refresh(result)
         return result
-
