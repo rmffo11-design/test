@@ -1,4 +1,3 @@
-import asyncio
 from collections import defaultdict
 from typing import Any, Dict, List
 
@@ -17,12 +16,9 @@ class ScoringService:
         if session is None:
             raise ValueError("Session not found")
 
-        # 독립적인 3개 쿼리 병렬 실행 (순차 → 동시)
-        answers, rules, metric_code_map = await asyncio.gather(
-            self._get_answers(session_id),
-            self._get_rules(session.questionnaire_id),
-            self._get_metric_code_map(),
-        )
+        answers = await self._get_answers(session_id)
+        rules = await self._get_rules(session.questionnaire_id)
+        metric_code_map = await self._get_metric_code_map()
 
         if not answers:
             result = await self._store_result(session_id, 0.0, {})
